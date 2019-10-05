@@ -1,3 +1,4 @@
+def make_probe_context_figs(model, field_input):
     def make_probe_context_fig(probe, num_context_words=20):
         """
         Returns fig showing tokens that occur most frequently before "probe"
@@ -97,3 +98,7 @@
         plt.legend()
         print('{} completed in {:.1f} secs'.format(sys._getframe().f_code.co_name, time.time() - start))
         return fig
+
+    figs = [make_probe_context_fig(probe) for probe in field_input] + \
+           [make_probe_context_alternative_fig(probe) for probe in field_input]
+    return figs
