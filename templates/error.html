@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block ludwigviztop %}
+    <div class="mdl-card__title">
+        <h3 class="mdl-card__title-text">Error {{ status_code }}</h3>
+    </div>
+    <div class="mdl-card__supporting-text">
+        <p><span style="color:red">{{ exception.message }}</span></p>
+    </div>
+{% endblock %}
+
+{% block ludwigvizmiddle %}
+    <script type='text/javascript'>
+        $(document).ready(function () {
+            $('.ludwigviz-middle').hide();
+        });
+    </script>
+{% endblock %}
+
+{% block ludwigvizbottom %}
+    <script type='text/javascript'>
+        $(document).ready(function () {
+            $('.ludwigviz-bottom').hide();
+        });
+    </script>
+{% endblock %}
