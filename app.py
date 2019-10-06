@@ -39,7 +39,13 @@ def home():
                            topbar_dict=topbar_dict,
                            rows=rows,
                            headers=table_headers)
+  
+  
+@app.route('/autocomplete/', methods=['GET'])
+def autocomplete():
+    return jsonify(json_list=session['autocomplete_list'])
 
+  
 @app.route('/field/<string:model_name>/<string:btn_name>', methods=['GET', 'POST'])
 def field(model_name, btn_name):
     # form
