@@ -1,16 +1,12 @@
-# CHILDESViz
-Browser interface for interactive plotting of word statistics in CHILDES corpus
+# Context
+
+Flask-based microservice that returns linguistic contexts in which a user-input word occurs in American-English portion of the CHILDES database.
 
 
-## Features
+## Intended Usage
 
-You can visualize:
-* cumulative frequency of a word
-* most frequent contexts of a word
-* show all contexts of a word
+It is designed to be used as an HTTP endpoint for web-based demonstration. The official demonstration is [here](http://philhuebner.com/projects/context-demo/).
 
-## TODO 
+## Compatibility
 
-* flask app
-* use alt-air or some other interactive plotting API
-* add plot which allows determining the maximum long distnace dependency in CHILDES
+Developed on Ubtuntu 16.04 and Python3.7
