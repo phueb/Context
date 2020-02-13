@@ -7,14 +7,14 @@ import random
 
 app = Flask(__name__)
 
+CONTEXT_SIZE = 2
+distances = range(CONTEXT_SIZE, CONTEXT_SIZE, 1)
 
-NUM_PARTS = 256
-PART_SIZE = 100
-NUM_WORDS = 50
+CORPUS_SIZE = 10_1000
+VOCAB_SIZE = 4096
 
-words = ['w{}'.format(i) for i in range(NUM_WORDS)]
-parts = [random.choices(random.choices(words, k=10), k=PART_SIZE)
-         for _ in range(NUM_PARTS)]
+words = ['w{}'.format(i) for i in range(VOCAB_SIZE)]
+tokens = [random.choice(random.choices(words, k=10)) for _ in range(CORPUS_SIZE)]
 
 
 @app.route('/', methods=['POST'])
@@ -27,10 +27,14 @@ def demo():
         word = 'BAD'
 
     # make html table containing linguistic contexts
-    probe_context_df = pd.DataFrame(index=[probe_id] * len(probe_x_mat), data=probe_x_mat)
-    table_df = probe_context_df.apply(
-        lambda term_ids: [model.hub.train_terms.types[term_id] for term_id in term_ids])
-    table_html = table_df.to_html(index=False, header=False).replace('border="1"', 'border="0"')
+    col2data = {s: [] for s in distances}
+    for loc, w in enumerate(tokens):
+        if w == word:
+            for n in distances:
+                col2data[n].append(tokens[n])
+
+    df = pd.DataFrame(data=col2data)
+    table_html = df.to_html(index=False, header=False).replace('border="1"', 'border="0"')
 
     # make json response + add headers
     response = make_response(jsonify({'result': table_html}))
