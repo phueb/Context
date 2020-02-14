@@ -1,50 +1,26 @@
-# from flask import Flask, make_response
-# from flask import jsonify
-# import base64
-
-# app = Flask(__name__)
-
-
-# @app.route('/', methods=['POST', 'GET'])
-# def demo():
-#     """
-#     return an image.
-#     """
-
-#     print('loading image!')
-#     print()
-
-#     with open("/home/phueb001/mysite/under-construction.png", "rb") as image_file:
-#         encoded_string = base64.b64encode(image_file.read())
-
-#     response = make_response(jsonify({'result': encoded_string}))
-#     response.headers.add('Access-Control-Allow-Origin', '*')
-#     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-#     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-
-#     return response
-
-
-# if __name__ == "__main__":
-#     app.run()
-
-
 from flask import Flask, make_response
 from flask import request
 from flask import jsonify
 import pandas as pd
-import random
+from pathlib import Path
+from functools import reduce
+from operator import iconcat
 
 
 app = Flask(__name__)
 
-CONTEXT_SIZE = 2
+CONTEXT_SIZE = 3
+CORPUS_NAME = 'childes-20191112'
+NUM_DOCS = 10_000
 
-CORPUS_SIZE = 10_000
-VOCAB_SIZE = 32
-
-words = ['w{}'.format(i) for i in range(VOCAB_SIZE)]
-tokens = [random.choice(random.choices(words, k=10)) for _ in range(CORPUS_SIZE)]
+# load tokens
+p = Path(__file__).parent.parent / 'corpora' / f'{CORPUS_NAME}.txt'
+if not p.exists():  # on pythonanywhere.com
+    p = Path(__file__).parent / 'corpora' / f'{CORPUS_NAME}.txt'
+text_in_file = p.read_text()
+docs = text_in_file.split('\n')[:NUM_DOCS]
+tokenized_docs = [d.split() for d in docs]
+tokens = reduce(iconcat, tokenized_docs, [])  # flatten list of lists
 
 
 @app.route('/', methods=['POST'])
@@ -54,14 +30,13 @@ def demo():
     if request.form.get('text') is not None:
         word = request.form.get('text')
     else:
-        word = 'BAD'
+        word = 'orange'
 
     # make html table containing linguistic contexts
-    col2data = {d: [] for d in range(-CONTEXT_SIZE, CONTEXT_SIZE, 1)}
-    print(tokens[:10])
+    col2data = {d: [] for d in range(-CONTEXT_SIZE, CONTEXT_SIZE + 1, 1)}
     for loc, w in enumerate(tokens):
         if w == word:
-            for d in range(-CONTEXT_SIZE, CONTEXT_SIZE, 1):
+            for d in range(-CONTEXT_SIZE, CONTEXT_SIZE + 1, 1):
                 col2data[d].append(tokens[loc+d])
 
     df = pd.DataFrame(data=col2data)
