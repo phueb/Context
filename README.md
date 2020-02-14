@@ -7,7 +7,7 @@ Flask-based micro-service that returns linguistic contexts in which a user-input
 
 ### Intended Usage
 
-It is designed to be used as an HTTP endpoint for web-based demonstration. The official demonstration is [here](http://philhuebner.com/projects/context-demo/).
+It is designed to be used as an HTTP endpoint for web-based demonstration. The official demonstration is [here](http://philhuebner.com/projects/context.html).
 
 ### Compatibility
 
